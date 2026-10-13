@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carta | Paso Gourmet</title>
+  <meta name="description" content="Carta digital de Paso Gourmet con platos, descripciones y precios.">
+
+  <!-- Favicon -->
+  <link rel="icon" href="{{ url_for('static', filename='uploads/favicon.svg') }}" type="image/svg+xml">
+  <link rel="icon" href="{{ url_for('static', filename='uploads/favicon.png') }}" sizes="64x64" type="image/png">
+
+  <!-- Fuentes de Google Fonts: Young Serif (títulos) y Figtree (texto) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;600;700&family=Young+Serif&display=swap" rel="stylesheet">
+
+  <!-- Íconos de Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+  <a class="saltar" href="#contenido">Saltar al contenido</a>
+
+  <header class="cabecera">
+    <div class="contenedor barra">
+      <a class="logo" href="{{ url_for('index') }}"><img src="{{ url_for('static', filename='uploads/favicon.png') }}" alt="" width="36" height="36">Paso Gourmet</a>
+      <nav aria-label="Navegación principal">
+        <ul>
+          <li><a href="{{ url_for('index') }}">Inicio</a></li>
+          <li><a href="{{ url_for('carta') }}" aria-current="page">Carta</a></li>
+          <li><a href="{{ url_for('nosotros') }}">Nosotros</a></li>
+          <li><a href="{{ url_for('reservas') }}">Reservas</a></li>
+          <li><a href="{{ url_for('contacto') }}">Contacto</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="contenido">
+    <div class="encabezado-pagina">
+      <div class="contenedor">
+        <h1>La carta</h1>
+        <p>Platos y precios actualizados. El pescado del día depende de lo que haya fresco.</p>
+      </div>
+    </div>
+
+    <div class="contenedor carta">
+      {% if error %}
+      <p class="aviso-error" role="alert">{{ error }}</p>
+      {% elif not categorias %}
+      <p>Todavía no hay platos cargados en la carta.</p>
+      {% endif %}
+
+      {% for cat in categorias %}
+      <section aria-labelledby="cat-{{ cat.id }}">
+        <h2 id="cat-{{ cat.id }}">{{ cat.nombre }}</h2>
+        <div class="platos">
+          {% for plato in cat.platos %}
+          <article class="plato">
+            <img src="{{ url_for('static', filename='uploads/' ~ plato.imagen) }}" alt="{{ plato.imagen_alt }}" width="800" height="600" loading="lazy">
+            <div class="plato-texto">
+              <h3>{{ plato.nombre }}</h3>
+              <p>{{ plato.descripcion }}</p>
+              <p class="precio">{{ plato.precio | precio_ar }}</p>
+            </div>
+          </article>
+          {% endfor %}
+        </div>
+      </section>
+      {% endfor %}
+    </div>
+
+    <section class="franja">
+      <div class="contenedor">
+        <h2>¿Ya elegiste?</h2>
+        <p>Asegurá tu lugar antes de venir.</p>
+        <a class="boton" href="{{ url_for('reservas') }}">Reservar mesa</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="pie">
+    <div class="contenedor">
+      <div class="pie-columnas">
+        <div>
+          <h2>Paso Gourmet</h2>
+          <p>Cocina para vecinos y turistas de Paso de la Patria.</p>
+        </div>
+        <div>
+          <h2>Contacto</h2>
+          <address>
+            <p><i class="fa-solid fa-location-dot" aria-hidden="true"></i>Paso de la Patria, Corrientes</p>
+            <p><i class="fa-solid fa-phone" aria-hidden="true"></i>+54 379 000-0000</p>
+            <p><i class="fa-solid fa-envelope" aria-hidden="true"></i>contacto@pasogourmet.example</p>
+          </address>
+        </div>
+      </div>
+      <small>Proyecto integrador de Marcelo González · Desarrollo de Software, Instituto Islas Malvinas. Restaurante ficticio con fines educativos.</small>
+    </div>
+  </footer>
+</body>
+</html>

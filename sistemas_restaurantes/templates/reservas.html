@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reservas | Paso Gourmet</title>
+  <meta name="description" content="Reservá tu mesa en Paso Gourmet indicando fecha, hora y cantidad de personas.">
+
+  <!-- Favicon -->
+  <link rel="icon" href="{{ url_for('static', filename='uploads/favicon.svg') }}" type="image/svg+xml">
+  <link rel="icon" href="{{ url_for('static', filename='uploads/favicon.png') }}" sizes="64x64" type="image/png">
+
+  <!-- Fuentes de Google Fonts: Young Serif (títulos) y Figtree (texto) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;600;700&family=Young+Serif&display=swap" rel="stylesheet">
+
+  <!-- Íconos de Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+  <a class="saltar" href="#contenido">Saltar al contenido</a>
+
+  <header class="cabecera">
+    <div class="contenedor barra">
+      <a class="logo" href="{{ url_for('index') }}"><img src="{{ url_for('static', filename='uploads/favicon.png') }}" alt="" width="36" height="36">Paso Gourmet</a>
+      <nav aria-label="Navegación principal">
+        <ul>
+          <li><a href="{{ url_for('index') }}">Inicio</a></li>
+          <li><a href="{{ url_for('carta') }}">Carta</a></li>
+          <li><a href="{{ url_for('nosotros') }}">Nosotros</a></li>
+          <li><a href="{{ url_for('reservas') }}" aria-current="page">Reservas</a></li>
+          <li><a href="{{ url_for('contacto') }}">Contacto</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="contenido">
+    <div class="encabezado-pagina">
+      <div class="contenedor">
+        <h1>Reservá tu mesa</h1>
+        <p>Completá el formulario y te confirmamos según la disponibilidad.</p>
+      </div>
+    </div>
+
+    <section>
+      <div class="contenedor dos-columnas">
+        <form name="reservas" method="POST" action="{{ url_for('store_reserva') }}">
+          {% if error %}
+          <p class="aviso-error" role="alert">{{ error }}</p>
+          {% endif %}
+
+          <fieldset>
+            <legend>Tus datos</legend>
+            <div class="fila">
+              <div class="campo">
+                <label for="r-nombre">Nombre y apellido</label>
+                <input type="text" id="r-nombre" name="nombre" required autocomplete="name">
+              </div>
+              <div class="campo">
+                <label for="r-tel">Teléfono</label>
+                <input type="tel" id="r-tel" name="telefono" required autocomplete="tel">
+              </div>
+            </div>
+            <div class="campo">
+              <label for="r-email">Correo electrónico</label>
+              <input type="email" id="r-email" name="email" required autocomplete="email">
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>Tu reserva</legend>
+            <div class="fila">
+              <div class="campo">
+                <label for="r-fecha">Fecha</label>
+                <input type="date" id="r-fecha" name="fecha" min="{{ hoy }}" required>
+              </div>
+              <div class="campo">
+                <label for="r-hora">Hora</label>
+                <select id="r-hora" name="hora" required>
+                  <option value="">Elegí un horario</option>
+                  <option value="12:00">12:00</option><option value="12:30">12:30</option><option value="13:00">13:00</option><option value="13:30">13:30</option><option value="14:00">14:00</option><option value="14:30">14:30</option><option value="15:00">15:00</option><option value="20:00">20:00</option><option value="20:30">20:30</option><option value="21:00">21:00</option><option value="21:30">21:30</option><option value="22:00">22:00</option><option value="22:30">22:30</option><option value="23:00">23:00</option>
+                </select>
+              </div>
+              <div class="campo">
+                <label for="r-personas">Personas</label>
+                <select id="r-personas" name="personas" required>
+                  <option value="">¿Cuántos son?</option>
+                  <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9 o más</option>
+                </select>
+              </div>
+            </div>
+            <p><strong>¿Dónde preferís sentarte?</strong></p>
+            <div class="opcion">
+              <input type="radio" id="r-salon" name="lugar" value="salon" checked>
+              <label for="r-salon">Salón</label>
+            </div>
+            <div class="opcion">
+              <input type="radio" id="r-patio" name="lugar" value="patio">
+              <label for="r-patio">Patio</label>
+            </div>
+            <div class="opcion">
+              <input type="checkbox" id="r-bebe" name="silla-bebe" value="si">
+              <label for="r-bebe">Necesito silla para bebé</label>
+            </div>
+          </fieldset>
+
+          <div class="campo">
+            <label for="r-comentarios">Comentarios (opcional)</label>
+            <textarea id="r-comentarios" name="comentarios"></textarea>
+          </div>
+
+          <button class="boton" type="submit">Enviar reserva</button>
+        </form>
+
+        <aside class="nota">
+          <h2>Antes de reservar</h2>
+          <p>Atendemos de jueves a domingo, al mediodía (12:00 a 15:30) y a la noche (20:00 a 24:00).</p>
+          <p>Tu reserva queda <strong>pendiente</strong> hasta que te confirmemos por teléfono o correo.</p>
+          <p>¿Preferís mirar primero qué comer? Entrá a la <a href="{{ url_for('carta') }}">carta</a>.</p>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <footer class="pie">
+    <div class="contenedor">
+      <div class="pie-columnas">
+        <div>
+          <h2>Paso Gourmet</h2>
+          <p>Cocina para vecinos y turistas de Paso de la Patria.</p>
+        </div>
+        <div>
+          <h2>Contacto</h2>
+          <address>
+            <p><i class="fa-solid fa-location-dot" aria-hidden="true"></i>Paso de la Patria, Corrientes</p>
+            <p><i class="fa-solid fa-phone" aria-hidden="true"></i>+54 379 000-0000</p>
+            <p><i class="fa-solid fa-envelope" aria-hidden="true"></i>contacto@pasogourmet.example</p>
+          </address>
+        </div>
+      </div>
+      <small>Proyecto integrador de Marcelo González · Desarrollo de Software, Instituto Islas Malvinas. Restaurante ficticio con fines educativos.</small>
+    </div>
+  </footer>
+</body>
+</html>

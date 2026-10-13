@@ -1,0 +1,265 @@
+/* ==========================================================
+   PASO GOURMET - Hoja de estilos única para todo el sitio
+   Maquetado con Flexbox (header, nav, footer, formularios)
+   y Grid (carta, galería, portada).
+   ========================================================== */
+
+/* ---------- 1. Colores y tipografías (variables) ---------- */
+:root {
+  --rio: #0e3b43;          /* verde azulado del río: color principal */
+  --rio-oscuro: #08262b;   /* fondo de portada y pie de página */
+  --dorado: #e3a72f;       /* color del dorado (el pez): acento */
+  --fondo: #f2f5f4;        /* fondo general de las páginas */
+  --blanco: #ffffff;
+  --texto: #17262a;
+  --suave: #4d5e61;        /* texto secundario */
+  --linea: #d5dedc;        /* bordes finos */
+  --titulos: "Young Serif", Georgia, serif;
+  --cuerpo: "Figtree", Arial, sans-serif;
+}
+
+/* ---------- 2. Base ---------- */
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: var(--cuerpo);
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: var(--texto);
+  background: var(--fondo);
+}
+
+img { max-width: 100%; height: auto; display: block; }
+
+h1, h2, h3 { font-family: var(--titulos); font-weight: 400; line-height: 1.15; margin: 0 0 0.6rem; }
+h1 { font-size: clamp(2.1rem, 5vw, 3.4rem); }
+h2 { font-size: clamp(1.6rem, 3.5vw, 2.2rem); }
+h3 { font-size: 1.3rem; }
+p  { margin: 0 0 1rem; max-width: 65ch; }
+a  { color: var(--rio); }
+
+/* Foco visible para quien navega con el teclado */
+a:focus-visible, button:focus-visible, input:focus-visible,
+select:focus-visible, textarea:focus-visible {
+  outline: 3px solid var(--dorado);
+  outline-offset: 2px;
+}
+
+/* Enlace "saltar al contenido" (accesibilidad) */
+.saltar { position: absolute; left: -999px; top: 0; background: var(--dorado); color: var(--rio-oscuro); padding: 0.6rem 1rem; z-index: 200; }
+.saltar:focus { left: 0; }
+
+/* Contenedor centrado */
+.contenedor { width: min(1100px, 92%); margin: 0 auto; }
+section { padding: 3.5rem 0; }
+
+/* ---------- 3. Encabezado y navegación (Flexbox) ---------- */
+/* Menú fijo: queda pegado arriba mientras se hace scroll */
+header.cabecera {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--rio-oscuro);
+  color: var(--blanco);
+  border-bottom: 1px solid #1d4a52;
+}
+
+.barra {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  padding: 0.9rem 0;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--titulos);
+  font-size: 1.6rem;
+  color: var(--blanco);
+  text-decoration: none;
+}
+.logo img { width: 36px; height: 36px; border-radius: 8px; }
+
+nav ul { display: flex; flex-wrap: wrap; gap: 0.25rem 1.4rem; list-style: none; margin: 0; padding: 0; }
+nav a {
+  color: var(--blanco);
+  text-decoration: none;
+  padding: 0.3rem 0;
+  border-bottom: 3px solid transparent;
+  transition: border-color 0.25s, color 0.25s;   /* TRANSICIÓN */
+}
+nav a:hover, nav a[aria-current="page"] { border-bottom-color: var(--dorado); color: var(--dorado); }
+
+/* ---------- 4. Botones ---------- */
+.boton {
+  display: inline-block;
+  padding: 0.8rem 1.5rem;
+  border-radius: 6px;
+  background: var(--dorado);
+  color: var(--rio-oscuro);
+  font-family: var(--cuerpo);
+  font-size: 1rem;
+  font-weight: 700;
+  text-decoration: none;
+  border: 2px solid var(--dorado);
+  cursor: pointer;
+  transition: transform 0.2s, background 0.2s, color 0.2s;   /* TRANSICIÓN */
+}
+.boton:hover { transform: translateY(-3px); }              /* TRANSFORMACIÓN */
+.boton.borde { background: transparent; color: var(--blanco); }
+.boton.borde:hover { background: var(--blanco); color: var(--rio-oscuro); border-color: var(--blanco); }
+
+/* ---------- 5. Portada (Grid de 2 columnas) ---------- */
+.portada { display: grid; grid-template-columns: 1fr 1fr; background: var(--rio-oscuro); color: var(--blanco); }
+.portada-texto { padding: 4rem 4% 4rem max(4%, calc((100vw - 1100px) / 2)); align-self: center; }
+.portada-texto p { color: #d6e4e2; font-size: 1.15rem; }
+.portada-botones { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-top: 1.5rem; }
+.portada img { width: 100%; height: 100%; min-height: 380px; object-fit: cover; }
+
+/* ANIMACIÓN: el texto de la portada entra una sola vez al cargar */
+@keyframes entrar {
+  from { opacity: 0; transform: translateX(-30px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+.portada-texto { animation: entrar 0.9s ease-out; }
+
+/* ---------- 6. Lo más pedido (Grid asimétrico) ---------- */
+.destacados { display: grid; grid-template-columns: 1.4fr 1fr; grid-template-rows: auto auto; gap: 1.2rem; }
+.destacados figure { margin: 0; position: relative; overflow: hidden; border-radius: 8px; background: var(--rio); }
+.destacados figure:first-child { grid-row: span 2; }
+.destacados img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+.destacados figure:hover img { transform: scale(1.06); }   /* TRANSFORMACIÓN al pasar el mouse */
+.destacados figcaption {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  padding: 1.2rem 1rem 0.8rem;
+  background: var(--rio-oscuro);
+  color: var(--blanco);
+  font-family: var(--titulos);
+  font-size: 1.2rem;
+}
+
+/* ---------- 7. Banda de imagen ancha ---------- */
+.banda { margin: 0; position: relative; }
+.banda img { width: 100%; height: 300px; object-fit: cover; }
+.banda figcaption { background: var(--rio); color: var(--blanco); padding: 1rem 4%; text-align: center; }
+
+/* ---------- 8. Franja de reserva ---------- */
+.franja { background: var(--rio); color: var(--blanco); text-align: center; }
+.franja p { margin-left: auto; margin-right: auto; color: #d6e4e2; }
+
+/* ---------- 9. Datos del local (Flex) ---------- */
+.datos { display: flex; flex-wrap: wrap; gap: 2rem; }
+.datos > div { flex: 1 1 240px; border-left: 4px solid var(--dorado); padding-left: 1rem; }
+.datos h3 { font-size: 1.15rem; }
+address { font-style: normal; }
+
+/* ---------- 10. Carta (Grid) ---------- */
+.encabezado-pagina { background: var(--rio); color: var(--blanco); padding: 3rem 0; }
+.encabezado-pagina p { color: #d6e4e2; margin: 0; }
+
+.carta h2 { border-bottom: 2px solid var(--dorado); padding-bottom: 0.4rem; margin-bottom: 1.5rem; }
+.carta section { padding: 2.2rem 0 0.5rem; }
+.platos { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.5rem; }
+.plato { background: var(--blanco); border: 1px solid var(--linea); border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; transition: transform 0.25s; }
+.plato:hover { transform: translateY(-5px); }
+.plato img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+.plato-texto { padding: 1rem 1.1rem 1.2rem; display: flex; flex-direction: column; flex: 1; }
+.plato-texto p { color: var(--suave); font-size: 0.97rem; flex: 1; }
+.precio { font-weight: 700; font-size: 1.2rem; color: var(--rio); margin: 0; }
+
+/* ---------- 11. Nosotros ---------- */
+.dos-columnas { display: grid; grid-template-columns: 2fr 1fr; gap: 3rem; align-items: start; }
+.nota { background: var(--blanco); border-left: 4px solid var(--dorado); padding: 1.2rem 1.4rem; border-radius: 0 8px 8px 0; }
+.nota h2 { font-size: 1.3rem; }
+.galeria { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+.galeria figure { margin: 0; overflow: hidden; border-radius: 8px; background: var(--blanco); border: 1px solid var(--linea); }
+.galeria img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; transition: transform 0.5s; }
+.galeria figure:hover img { transform: scale(1.07); }
+.galeria figcaption { padding: 0.6rem 0.9rem; font-size: 0.95rem; color: var(--suave); }
+
+/* ---------- 12. Formularios (Flex) ---------- */
+form { background: var(--blanco); border: 1px solid var(--linea); border-radius: 8px; padding: 1.6rem; }
+fieldset { border: 1px solid var(--linea); border-radius: 6px; margin: 0 0 1.2rem; padding: 1rem 1.2rem; }
+legend { font-family: var(--titulos); padding: 0 0.5rem; color: var(--rio); }
+.campo { display: flex; flex-direction: column; margin-bottom: 1rem; }
+.fila { display: flex; flex-wrap: wrap; gap: 1rem; }
+.fila .campo { flex: 1 1 200px; }
+label { font-weight: 600; margin-bottom: 0.3rem; }
+input[type="text"], input[type="email"], input[type="tel"], input[type="date"], select, textarea {
+  font-family: var(--cuerpo);
+  font-size: 1rem;
+  padding: 0.7rem 0.8rem;
+  border: 1px solid #9fb0ae;
+  border-radius: 6px;
+  background: var(--blanco);
+  color: var(--texto);
+  transition: border-color 0.2s;
+}
+input:focus, select:focus, textarea:focus { border-color: var(--rio); }
+textarea { min-height: 130px; resize: vertical; }
+.opcion { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.5rem; }
+.opcion label { margin: 0; font-weight: 400; }
+.opcion input { width: 1.15rem; height: 1.15rem; accent-color: var(--rio); }
+form .boton { margin-top: 0.5rem; }
+
+/* Mapa incrustado (iframe) */
+.mapa { width: 100%; height: 320px; border: 0; border-radius: 8px; }
+
+/* ---------- 13. Pie de página (Flex) ---------- */
+footer.pie { background: var(--rio-oscuro); color: #d6e4e2; padding: 2.5rem 0 1.5rem; }
+.pie-columnas { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2rem; }
+.pie-columnas > div { flex: 1 1 220px; }
+.pie h2 { font-size: 1.2rem; color: var(--blanco); }
+.pie ul { list-style: none; margin: 0; padding: 0; }
+.pie a { color: #d6e4e2; }
+.pie a:hover { color: var(--dorado); }
+.pie i { color: var(--dorado); width: 1.3rem; }
+.pie small { display: block; margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #1d4a52; }
+
+/* ---------- 14. Responsive (celulares y tablets) ---------- */
+@media (max-width: 800px) {
+  .portada, .dos-columnas, .destacados { grid-template-columns: 1fr; }
+  .destacados figure:first-child { grid-row: auto; }
+  .destacados img { aspect-ratio: 4 / 3; }
+  .portada-texto { padding: 2.5rem 4%; }
+  .portada img { min-height: 240px; }
+  .galeria { grid-template-columns: 1fr 1fr; }
+  section { padding: 2.5rem 0; }
+}
+@media (max-width: 480px) {
+  .galeria { grid-template-columns: 1fr; }
+}
+
+/* Celulares: el menú queda compacto (logo arriba, enlaces en una sola fila) para no ocupar tanta pantalla al estar fijo */
+@media (max-width: 700px) {
+  .barra { padding: 0.5rem 0; gap: 0.2rem; }
+  .logo { font-size: 1.3rem; }
+  .logo img { width: 28px; height: 28px; }
+  nav { width: 100%; }
+  nav ul { justify-content: space-between; gap: 0.2rem 0.5rem; }
+  nav a { font-size: 0.92rem; padding: 0.2rem 0; }
+}
+
+/* Respeta a quien pidió menos movimiento en su dispositivo */
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
+
+/* Ajuste: separación entre títulos de sección y su contenido */
+.datos, .destacados, .galeria, .mapa { margin-top: 1.2rem; }
+.banda figcaption { background: var(--rio-oscuro); }
+
+/* NUEVO: cartel de error para los formularios y la carta */
+.aviso-error {
+  background: #fdecea;
+  border-left: 4px solid #b3261e;
+  color: #601410;
+  padding: 0.8rem 1rem;
+  border-radius: 0 6px 6px 0;
+  margin: 0 0 1rem;
+}

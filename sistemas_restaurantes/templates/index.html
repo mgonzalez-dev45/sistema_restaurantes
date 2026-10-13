@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inicio | Paso Gourmet</title>
+  <meta name="description" content="Paso Gourmet: restaurante en Paso de la Patria. Mirá la carta y reservá tu mesa desde el celular.">
+
+  <!-- Favicon -->
+  <link rel="icon" href="{{ url_for('static', filename='uploads/favicon.svg') }}" type="image/svg+xml">
+  <link rel="icon" href="{{ url_for('static', filename='uploads/favicon.png') }}" sizes="64x64" type="image/png">
+
+  <!-- Fuentes de Google Fonts: Young Serif (títulos) y Figtree (texto) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;600;700&family=Young+Serif&display=swap" rel="stylesheet">
+
+  <!-- Íconos de Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<wa-icon name="whatsapp" family="brands"></wa-icon>
+
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+  <a class="saltar" href="#contenido">Saltar al contenido</a>
+
+  <header class="cabecera">
+    <div class="contenedor barra">
+      <a class="logo" href="{{ url_for('index') }}"><img src="{{ url_for('static', filename='uploads/favicon.png') }}" alt="" width="36" height="36">Paso Gourmet</a>
+      <nav aria-label="Navegación principal">
+        <ul>
+          <li><a href="{{ url_for('index') }}" aria-current="page">Inicio</a></li>
+          <li><a href="{{ url_for('carta') }}">Carta</a></li>
+          <li><a href="{{ url_for('nosotros') }}">Nosotros</a></li>
+          <li><a href="{{ url_for('reservas') }}">Reservas</a></li>
+          <li><a href="{{ url_for('contacto') }}">Contacto</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="contenido">
+    <section class="portada" style="padding:0">
+      <div class="portada-texto">
+        <h1>Comé bien en Paso de la Patria</h1>
+        <p>Mirá la carta del día, elegí tu plato y reservá tu mesa desde el celular, sin complicaciones.</p>
+        <div class="portada-botones">
+          <a class="boton" href="{{ url_for('carta') }}">Ver la carta</a>
+          <a class="boton borde" href="{{ url_for('reservas') }}">Reservar mesa</a>
+        </div>
+      </div>
+      <img src="{{ url_for('static', filename='uploads/napolitana-grande.jpg') }}" alt="Milanesa a la napolitana con jamón, queso y salsa de tomate, junto a un queso y un tomate" width="1400" height="933">
+    </section>
+
+    <section>
+      <div class="contenedor">
+        <h2>Lo más pedido</h2>
+        <p>Platos que se repiten en las mesas de vecinos y turistas.</p>
+        <div class="destacados">
+          <figure>
+            <img src="{{ url_for('static', filename='uploads/napolitana.jpg') }}" alt="Milanesa a la napolitana" width="800" height="600" loading="lazy">
+            <figcaption>Milanesa a la napolitana</figcaption>
+          </figure>
+          <figure>
+            <img src="{{ url_for('static', filename='uploads/parrillada.jpg') }}" alt="Parrillada con carne, pollo y brochettes de langostinos" width="800" height="600" loading="lazy">
+            <figcaption>Parrillada mixta</figcaption>
+          </figure>
+          <figure>
+            <img src="{{ url_for('static', filename='uploads/empanadas.jpg') }}" alt="Empanadas criollas sobre una tabla de madera" width="800" height="600" loading="lazy">
+            <figcaption>Empanadas criollas</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <figure class="banda">
+      <img src="{{ url_for('static', filename='uploads/banner-pescado.jpg') }}" alt="Pescados a la parrilla, con humo y pinzas" width="1600" height="427" loading="lazy">
+      <figcaption>Pescado del día a la parrilla, según lo que haya fresco.</figcaption>
+    </figure>
+
+    <section class="franja">
+      <div class="contenedor">
+        <h2>¿Venís a comer el domingo?</h2>
+        <p>Reservá tu lugar con fecha, hora y cantidad de personas. Te confirmamos según la disponibilidad del salón.</p>
+        <a class="boton" href="{{ url_for('reservas') }}">Reservar mesa</a>
+      </div>
+    </section>
+
+    <section>
+      <div class="contenedor">
+        <h2>Cómo llegar y cuándo venir</h2>
+        <div class="datos">
+          <div>
+            <h3>Dónde estamos</h3>
+            <address>Paso de la Patria, Corrientes</address>
+          </div>
+          <div>
+            <h3>Horarios</h3>
+            <p>Jueves a domingo<br>Mediodía: 12:00 a 15:30<br>Noche: 20:00 a 24:00</p>
+          </div>
+          <div>
+            <h3>¿Dudas?</h3>
+            <p>Escribinos desde la página de <a href="{{ url_for('contacto') }}">contacto</a>.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="pie">
+    <div class="contenedor">
+      <div class="pie-columnas">
+        <div>
+          <h2>Paso Gourmet</h2>
+          <p>Cocina para vecinos y turistas de Paso de la Patria.</p>
+        </div>
+        <div>
+          <h2>Contacto</h2>
+          <address>
+            <p><i class="fa-solid fa-location-dot" aria-hidden="true"></i>Paso de la Patria, Corrientes</p>
+            <p><i class="fa-solid fa-phone" aria-hidden="true"></i>+54 379 000-0000</p>
+            <p><i class="fa-solid fa-envelope" aria-hidden="true"></i>contacto@pasogourmet.example</p>
+          </address>
+        </div>
+      </div>
+      <small>Proyecto integrador de Marcelo González · Desarrollo de Software, Instituto Islas Malvinas. Restaurante ficticio con fines educativos.</small>
+    </div>
+  </footer>
+</body>
+</html>
