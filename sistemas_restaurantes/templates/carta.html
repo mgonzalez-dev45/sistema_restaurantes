@@ -47,29 +47,25 @@
     </div>
 
     <div class="contenedor carta">
-      {% if error %}
-      <p class="aviso-error" role="alert">{{ error }}</p>
-      {% elif not categorias %}
+      {% if not platos %}
       <p>Todavía no hay platos cargados en la carta.</p>
-      {% endif %}
-
-      {% for cat in categorias %}
-      <section aria-labelledby="cat-{{ cat.id }}">
-        <h2 id="cat-{{ cat.id }}">{{ cat.nombre }}</h2>
+      {% else %}
+      <section aria-labelledby="cat-platos">
+        <h2 id="cat-platos">Nuestros platos</h2>
         <div class="platos">
-          {% for plato in cat.platos %}
+          {% for plato in platos %}
           <article class="plato">
-            <img src="{{ url_for('static', filename='uploads/' ~ plato.imagen) }}" alt="{{ plato.imagen_alt }}" width="800" height="600" loading="lazy">
+            <img src="{{ url_for('static', filename='uploads/' ~ plato[4]) }}" alt="{{ plato[1] }}" width="800" height="600" loading="lazy">
             <div class="plato-texto">
-              <h3>{{ plato.nombre }}</h3>
-              <p>{{ plato.descripcion }}</p>
-              <p class="precio">{{ plato.precio | precio_ar }}</p>
+              <h3>{{ plato[1] }}</h3>
+              <p>{{ plato[2] }}</p>
+              <p class="precio">{{ plato[3] | precio_ar }}</p>
             </div>
           </article>
           {% endfor %}
         </div>
       </section>
-      {% endfor %}
+      {% endif %}
     </div>
 
     <section class="franja">

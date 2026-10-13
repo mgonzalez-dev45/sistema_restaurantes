@@ -48,7 +48,7 @@
 
     <section>
       <div class="contenedor dos-columnas">
-        <form name="contacto" method="POST" action="{{ url_for('store_contacto') }}">
+        <form name="contacto" method="GET" action="#">
           {% if error %}
           <p class="aviso-error" role="alert">{{ error }}</p>
           {% endif %}
