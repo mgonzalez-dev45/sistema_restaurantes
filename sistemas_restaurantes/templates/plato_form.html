@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ accion }} plato | Paso Gourmet</title>
+
+  <!-- Favicon -->
+  <link rel="icon" href="{{ url_for('static', filename='uploads/favicon.svg') }}" type="image/svg+xml">
+  <link rel="icon" href="{{ url_for('static', filename='uploads/favicon.png') }}" sizes="64x64" type="image/png">
+
+  <!-- Fuentes de Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;600;700&family=Young+Serif&display=swap" rel="stylesheet">
+
+  <!-- Íconos de Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+  <a class="saltar" href="#contenido">Saltar al contenido</a>
+
+  <header class="cabecera">
+    <div class="contenedor barra">
+      <a class="logo" href="{{ url_for('index') }}">
+        <img src="{{ url_for('static', filename='uploads/favicon.png') }}" alt="" width="36" height="36">
+        Paso Gourmet
+      </a>
+      <nav aria-label="Navegación principal">
+        <ul>
+          <li><a href="{{ url_for('index') }}">Inicio</a></li>
+          <li><a href="{{ url_for('carta') }}">Carta</a></li>
+          <li><a href="{{ url_for('nosotros') }}">Nosotros</a></li>
+          <li><a href="{{ url_for('reservas') }}">Reservas</a></li>
+          <li><a href="{{ url_for('contacto') }}">Contacto</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="contenido">
+    <div class="encabezado-pagina">
+      <div class="contenedor">
+        <h1>{{ accion }} plato</h1>
+        <p>Completá los datos del plato para actualizar la carta del restaurante.</p>
+      </div>
+    </div>
+
+    <section>
+      <div class="contenedor" style="max-width: 650px;">
+        <form method="POST">
+          <fieldset>
+            <legend>{{ accion }} plato</legend>
+
+            <div class="campo">
+              <label for="nombre">Nombre del plato *</label>
+              <input type="text" id="nombre" name="nombre" required value="{{ plato[1] if plato else '' }}" placeholder="Ej: Milanesa napolitana">
+            </div>
+
+            <div class="campo">
+              <label for="descripcion">Descripción *</label>
+              <textarea id="descripcion" name="descripcion" rows="3" required placeholder="Ej: Con salsa de tomate casera, jamón cocido, queso muzzarella y papas fritas.">{{ plato[2] if plato else '' }}</textarea>
+            </div>
+
+            <div class="fila">
+              <div class="campo">
+                <label for="precio">Precio ($ AR) *</label>
+                <input type="number" id="precio" name="precio" min="0" step="1" required value="{{ plato[3] if plato else '' }}" placeholder="Ej: 14500">
+              </div>
+
+              <div class="campo">
+                <label for="imagen">Nombre del archivo de imagen</label>
+                <input type="text" id="imagen" name="imagen" value="{{ plato[4] if plato else '' }}" placeholder="Ej: milanesa.jpg">
+                <small style="color: var(--suave); margin-top: 0.3rem;">Debe estar en la carpeta <code>static/uploads/</code> (ej: <em>milanesa.jpg</em>, <em>empanadas.jpg</em>, <em>hamburguesa.jpg</em>).</small>
+              </div>
+            </div>
+          </fieldset>
+
+          <div style="display: flex; gap: 1rem; align-items: center; margin-top: 1rem;">
+            <button type="submit" class="boton">
+              <i class="fa-solid fa-floppy-disk"></i> Guardar plato
+            </button>
+            <a href="{{ url_for('carta') }}" class="boton boton-borde" style="color: var(--rio); border-color: var(--rio);">
+              Cancelar
+            </a>
+          </div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="pie">
+    <div class="contenedor">
+      <small>Proyecto integrador de Marcelo González · Desarrollo de Software, Instituto Islas Malvinas.</small>
+    </div>
+  </footer>
+</body>
+</html>

@@ -47,11 +47,17 @@
     </div>
 
     <div class="contenedor carta">
-      {% if not platos %}
-      <p>Todavía no hay platos cargados en la carta.</p>
-      {% else %}
       <section aria-labelledby="cat-platos">
-        <h2 id="cat-platos">Nuestros platos</h2>
+        <div class="barra-carta">
+          <h2 id="cat-platos">Nuestros platos</h2>
+          <a href="{{ url_for('nuevo_plato') }}" class="boton boton-agregar">
+            <i class="fa-solid fa-plus"></i> Agregar plato
+          </a>
+        </div>
+
+        {% if not platos %}
+        <p>Todavía no hay platos cargados en la carta. ¡Sé el primero en agregar uno!</p>
+        {% else %}
         <div class="platos">
           {% for plato in platos %}
           <article class="plato">
@@ -60,12 +66,24 @@
               <h3>{{ plato[1] }}</h3>
               <p>{{ plato[2] }}</p>
               <p class="precio">{{ plato[3] | precio_ar }}</p>
+
+              <!-- Botones de administración (CRUD) -->
+              <div class="acciones-plato">
+                <a href="{{ url_for('editar_plato', id=plato[0]) }}" class="boton-accion boton-editar">
+                  <i class="fa-solid fa-pen-to-square"></i> Editar
+                </a>
+                <form action="{{ url_for('eliminar_plato', id=plato[0]) }}" method="POST" onsubmit="return confirm('¿Seguro que querés eliminar «{{ plato[1] }}»?');" class="form-eliminar">
+                  <button type="submit" class="boton-accion boton-eliminar">
+                    <i class="fa-solid fa-trash"></i> Eliminar
+                  </button>
+                </form>
+              </div>
             </div>
           </article>
           {% endfor %}
         </div>
+        {% endif %}
       </section>
-      {% endif %}
     </div>
 
     <section class="franja">

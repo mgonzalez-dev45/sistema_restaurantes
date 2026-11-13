@@ -263,3 +263,87 @@ footer.pie { background: var(--rio-oscuro); color: #d6e4e2; padding: 2.5rem 0 1.
   border-radius: 0 6px 6px 0;
   margin: 0 0 1rem;
 }
+
+/* ---------- 15. Estilos para el CRUD de Platos ---------- */
+.barra-carta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  border-bottom: 2px solid var(--dorado);
+  padding-bottom: 0.6rem;
+  margin-bottom: 1.5rem;
+}
+.barra-carta h2 {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+.boton-agregar {
+  padding: 0.5rem 1.1rem;
+  font-size: 0.95rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* Botones de acción dentro de cada plato */
+.acciones-plato {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--linea);
+}
+.form-eliminar {
+  margin: 0 !important;
+  padding: 0 !important;
+  background: none !important;
+  border: none !important;
+  display: inline-block;
+}
+.boton-accion {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  border: 1px solid transparent;
+  transition: background 0.2s, color 0.2s, transform 0.2s;
+}
+.boton-accion:hover {
+  transform: translateY(-1px);
+}
+.boton-editar {
+  background: #e8f0ef;
+  color: var(--rio);
+  border-color: #bcd2ce;
+}
+.boton-editar:hover {
+  background: var(--rio);
+  color: var(--blanco);
+}
+.boton-eliminar {
+  background: #fdecea;
+  color: #b3261e;
+  border-color: #f5c2be;
+  font-family: inherit;
+}
+.boton-eliminar:hover {
+  background: #b3261e;
+  color: var(--blanco);
+}
+.boton-borde {
+  background: transparent;
+  border: 2px solid var(--rio);
+  color: var(--rio);
+}
+.boton-borde:hover {
+  background: var(--rio);
+  color: var(--blanco);
+}
