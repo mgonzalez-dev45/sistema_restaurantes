@@ -1,5 +1,4 @@
-# AVANCE: navegación entre páginas con Flask + la carta leída desde MySQL.
-# Todavía NO se guarda nada desde los formularios (reservas y contacto quedan para la entrega final).
+# AVANCE: navegación entre páginas con Flask + CRUD de platos en MySQL + persistencia de reservas y contacto.
 from datetime import date
 from flask import Flask, render_template, request, redirect, url_for
 from flask_mysqldb import MySQL
@@ -107,23 +106,96 @@ def nosotros():
     return render_template('nosotros.html')
 
 
-# --- RESERVAS (solo muestra el formulario, todavía no guarda) ---
-@app.route('/reservas')
+# --- RESERVAS (procesa y guarda en MySQL, luego redirige a gracias) ---
+@app.route('/reservas', methods=['GET', 'POST'])
 def reservas():
+    if request.method == 'POST':
+        nombre = request.form.get('nombre')
+        telefono = request.form.get('telefono')
+        email = request.form.get('email')
+        fecha = request.form.get('fecha')
+        hora = request.form.get('hora')
+        personas = request.form.get('personas')
+        lugar = request.form.get('lugar') or 'salon'
+        silla_bebe = request.form.get('silla-bebe') or 'no'
+        comentarios = request.form.get('comentarios') or ''
+
+        try:
+            cursor = mysql.connection.cursor()
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS reservas (
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    nombre VARCHAR(100) NOT NULL,
+                    telefono VARCHAR(50) NOT NULL,
+                    email VARCHAR(100) NOT NULL,
+                    fecha DATE NOT NULL,
+                    hora VARCHAR(10) NOT NULL,
+                    personas INT NOT NULL,
+                    lugar VARCHAR(20) NOT NULL DEFAULT 'salon',
+                    silla_bebe VARCHAR(5) NOT NULL DEFAULT 'no',
+                    comentarios TEXT,
+                    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+            """)
+            cursor.execute("""
+                INSERT INTO reservas (nombre, telefono, email, fecha, hora, personas, lugar, silla_bebe, comentarios)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+            """, (nombre, telefono, email, fecha, hora, personas, lugar, silla_bebe, comentarios))
+            mysql.connection.commit()
+            cursor.close()
+        except Exception as e:
+            print("Error al guardar reserva:", e)
+
+        return redirect(url_for('gracias', tipo='reserva'))
+
     # 'hoy' evita que el calendario deje elegir fechas pasadas
     return render_template('reservas.html', hoy=date.today().isoformat())
 
 
-# --- CONTACTO (solo muestra el formulario, todavía no guarda) ---
-@app.route('/contacto')
+# --- CONTACTO (procesa y guarda en MySQL, luego redirige a gracias) ---
+@app.route('/contacto', methods=['GET', 'POST'])
 def contacto():
+    if request.method == 'POST':
+        nombre = request.form.get('nombre')
+        email = request.form.get('email')
+        telefono = request.form.get('telefono') or ''
+        motivo = request.form.get('motivo')
+        mensaje = request.form.get('mensaje')
+        respuesta = request.form.get('respuesta') or 'correo'
+
+        try:
+            cursor = mysql.connection.cursor()
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS mensajes (
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    nombre VARCHAR(100) NOT NULL,
+                    email VARCHAR(100) NOT NULL,
+                    telefono VARCHAR(50),
+                    motivo VARCHAR(50) NOT NULL,
+                    mensaje TEXT NOT NULL,
+                    respuesta VARCHAR(20) NOT NULL DEFAULT 'correo',
+                    fecha_envio TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+            """)
+            cursor.execute("""
+                INSERT INTO mensajes (nombre, email, telefono, motivo, mensaje, respuesta)
+                VALUES (%s, %s, %s, %s, %s, %s)
+            """, (nombre, email, telefono, motivo, mensaje, respuesta))
+            mysql.connection.commit()
+            cursor.close()
+        except Exception as e:
+            print("Error al guardar mensaje:", e)
+
+        return redirect(url_for('gracias', tipo='consulta'))
+
     return render_template('contacto.html')
 
 
 # --- GRACIAS ---
 @app.route('/gracias')
 def gracias():
-    return render_template('gracias.html', tipo='consulta')
+    tipo = request.args.get('tipo', 'consulta')
+    return render_template('gracias.html', tipo=tipo)
 
 
 if __name__ == '__main__':

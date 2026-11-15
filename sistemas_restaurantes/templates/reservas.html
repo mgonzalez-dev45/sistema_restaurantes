@@ -48,7 +48,7 @@
 
     <section>
       <div class="contenedor dos-columnas">
-        <form name="reservas" method="GET" action="#">
+        <form name="reservas" method="POST" action="{{ url_for('reservas') }}">
           {% if error %}
           <p class="aviso-error" role="alert">{{ error }}</p>
           {% endif %}
