@@ -1,9 +1,3 @@
-/* ==========================================================
-   PASO GOURMET - Hoja de estilos única para todo el sitio
-   Maquetado con Flexbox (header, nav, footer, formularios)
-   y Grid (carta, galería, portada).
-   ========================================================== */
-
 /* ---------- 1. Colores y tipografías (variables) ---------- */
 :root {
   --rio: #0e3b43;          /* verde azulado del río: color principal */
@@ -20,6 +14,9 @@
 
 /* ---------- 2. Base ---------- */
 * { box-sizing: border-box; }
+
+/* Deja lugar debajo del menú fijo para que no tape los enlaces internos */
+html { scroll-padding-top: 5rem; }
 
 body {
   margin: 0;
@@ -116,7 +113,8 @@ nav a:hover, nav a[aria-current="page"] { border-bottom-color: var(--dorado); co
 
 /* ---------- 5. Portada (Grid de 2 columnas) ---------- */
 .portada { display: grid; grid-template-columns: 1fr 1fr; background: var(--rio-oscuro); color: var(--blanco); }
-.portada-texto { padding: 4rem 4% 4rem max(4%, calc((100vw - 1100px) / 2)); align-self: center; }
+/* 100% - 550px equivale a (ancho total - 1100px) / 2: alinea el texto con el contenedor */
+.portada-texto { padding: 4rem 4% 4rem max(4%, calc(100% - 550px)); align-self: center; }
 .portada-texto p { color: #d6e4e2; font-size: 1.15rem; }
 .portada-botones { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-top: 1.5rem; }
 .portada img { width: 100%; height: 100%; min-height: 380px; object-fit: cover; }
@@ -129,7 +127,7 @@ nav a:hover, nav a[aria-current="page"] { border-bottom-color: var(--dorado); co
 .portada-texto { animation: entrar 0.9s ease-out; }
 
 /* ---------- 6. Lo más pedido (Grid asimétrico) ---------- */
-.destacados { display: grid; grid-template-columns: 1.4fr 1fr; grid-template-rows: auto auto; gap: 1.2rem; }
+.destacados { display: grid; grid-template-columns: 1.4fr 1fr; grid-template-rows: auto auto; gap: 1.2rem; margin-top: 1.2rem; }
 .destacados figure { margin: 0; position: relative; overflow: hidden; border-radius: 8px; background: var(--rio); }
 .destacados figure:first-child { grid-row: span 2; }
 .destacados img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
@@ -146,14 +144,14 @@ nav a:hover, nav a[aria-current="page"] { border-bottom-color: var(--dorado); co
 /* ---------- 7. Banda de imagen ancha ---------- */
 .banda { margin: 0; position: relative; }
 .banda img { width: 100%; height: 300px; object-fit: cover; }
-.banda figcaption { background: var(--rio); color: var(--blanco); padding: 1rem 4%; text-align: center; }
+.banda figcaption { background: var(--rio-oscuro); color: var(--blanco); padding: 1rem 4%; text-align: center; }
 
 /* ---------- 8. Franja de reserva ---------- */
 .franja { background: var(--rio); color: var(--blanco); text-align: center; }
 .franja p { margin-left: auto; margin-right: auto; color: #d6e4e2; }
 
 /* ---------- 9. Datos del local (Flex) ---------- */
-.datos { display: flex; flex-wrap: wrap; gap: 2rem; }
+.datos { display: flex; flex-wrap: wrap; gap: 2rem; margin-top: 1.2rem; }
 .datos > div { flex: 1 1 240px; border-left: 4px solid var(--dorado); padding-left: 1rem; }
 .datos h3 { font-size: 1.15rem; }
 address { font-style: normal; }
@@ -176,14 +174,14 @@ address { font-style: normal; }
 .dos-columnas { display: grid; grid-template-columns: 2fr 1fr; gap: 3rem; align-items: start; }
 .nota { background: var(--blanco); border-left: 4px solid var(--dorado); padding: 1.2rem 1.4rem; border-radius: 0 8px 8px 0; }
 .nota h2 { font-size: 1.3rem; }
-.galeria { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+.galeria { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1.2rem; }
 .galeria figure { margin: 0; overflow: hidden; border-radius: 8px; background: var(--blanco); border: 1px solid var(--linea); }
 .galeria img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; transition: transform 0.5s; }
 .galeria figure:hover img { transform: scale(1.07); }
 .galeria figcaption { padding: 0.6rem 0.9rem; font-size: 0.95rem; color: var(--suave); }
 
 /* ---------- 12. Formularios (Flex) ---------- */
-form { background: var(--blanco); border: 1px solid var(--linea); border-radius: 8px; padding: 1.6rem; }
+form:not(.form-eliminar) { background: var(--blanco); border: 1px solid var(--linea); border-radius: 8px; padding: 1.6rem; }
 fieldset { border: 1px solid var(--linea); border-radius: 6px; margin: 0 0 1.2rem; padding: 1rem 1.2rem; }
 legend { font-family: var(--titulos); padding: 0 0.5rem; color: var(--rio); }
 .campo { display: flex; flex-direction: column; margin-bottom: 1rem; }
@@ -194,7 +192,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="date"], 
   font-family: var(--cuerpo);
   font-size: 1rem;
   padding: 0.7rem 0.8rem;
-  border: 1px solid #9fb0ae;
+  border: 1px solid #6f8280;
   border-radius: 6px;
   background: var(--blanco);
   color: var(--texto);
@@ -208,7 +206,7 @@ textarea { min-height: 130px; resize: vertical; }
 form .boton { margin-top: 0.5rem; }
 
 /* Mapa incrustado (iframe) */
-.mapa { width: 100%; height: 320px; border: 0; border-radius: 8px; }
+.mapa { width: 100%; height: 320px; border: 0; border-radius: 8px; margin-top: 1.2rem; }
 
 /* ---------- 13. Pie de página (Flex) ---------- */
 footer.pie { background: var(--rio-oscuro); color: #d6e4e2; padding: 2.5rem 0 1.5rem; }
@@ -221,40 +219,7 @@ footer.pie { background: var(--rio-oscuro); color: #d6e4e2; padding: 2.5rem 0 1.
 .pie i { color: var(--dorado); width: 1.3rem; }
 .pie small { display: block; margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #1d4a52; }
 
-/* ---------- 14. Responsive (celulares y tablets) ---------- */
-@media (max-width: 800px) {
-  .portada, .dos-columnas, .destacados { grid-template-columns: 1fr; }
-  .destacados figure:first-child { grid-row: auto; }
-  .destacados img { aspect-ratio: 4 / 3; }
-  .portada-texto { padding: 2.5rem 4%; }
-  .portada img { min-height: 240px; }
-  .galeria { grid-template-columns: 1fr 1fr; }
-  section { padding: 2.5rem 0; }
-}
-@media (max-width: 480px) {
-  .galeria { grid-template-columns: 1fr; }
-}
-
-/* Celulares: el menú queda compacto (logo arriba, enlaces en una sola fila) para no ocupar tanta pantalla al estar fijo */
-@media (max-width: 700px) {
-  .barra { padding: 0.5rem 0; gap: 0.2rem; }
-  .logo { font-size: 1.3rem; }
-  .logo img { width: 28px; height: 28px; }
-  nav { width: 100%; }
-  nav ul { justify-content: space-between; gap: 0.2rem 0.5rem; }
-  nav a { font-size: 0.92rem; padding: 0.2rem 0; }
-}
-
-/* Respeta a quien pidió menos movimiento en su dispositivo */
-@media (prefers-reduced-motion: reduce) {
-  * { animation: none !important; transition: none !important; }
-}
-
-/* Ajuste: separación entre títulos de sección y su contenido */
-.datos, .destacados, .galeria, .mapa { margin-top: 1.2rem; }
-.banda figcaption { background: var(--rio-oscuro); }
-
-/* NUEVO: cartel de error para los formularios y la carta */
+/* Cartel de error para los formularios y la carta */
 .aviso-error {
   background: #fdecea;
   border-left: 4px solid #b3261e;
@@ -264,7 +229,7 @@ footer.pie { background: var(--rio-oscuro); color: #d6e4e2; padding: 2.5rem 0 1.
   margin: 0 0 1rem;
 }
 
-/* ---------- 15. Estilos para el CRUD de Platos ---------- */
+/* ---------- 14. Estilos para el CRUD de Platos ---------- */
 .barra-carta {
   display: flex;
   justify-content: space-between;
@@ -297,10 +262,8 @@ footer.pie { background: var(--rio-oscuro); color: #d6e4e2; padding: 2.5rem 0 1.
   border-top: 1px solid var(--linea);
 }
 .form-eliminar {
-  margin: 0 !important;
-  padding: 0 !important;
-  background: none !important;
-  border: none !important;
+  margin: 0;
+  padding: 0;
   display: inline-block;
 }
 .boton-accion {
@@ -346,4 +309,31 @@ footer.pie { background: var(--rio-oscuro); color: #d6e4e2; padding: 2.5rem 0 1.
 .boton-borde:hover {
   background: var(--rio);
   color: var(--blanco);
+}
+
+/* ---------- 15. Responsive (celulares y tablets) ---------- */
+@media (max-width: 800px) {
+  .portada, .dos-columnas, .destacados { grid-template-columns: 1fr; }
+  .destacados figure:first-child { grid-row: auto; }
+  .destacados img { aspect-ratio: 4 / 3; }
+  .portada-texto { padding: 2.5rem 4%; }
+  .portada img { min-height: 240px; }
+  .galeria { grid-template-columns: 1fr 1fr; }
+  section { padding: 2.5rem 0; }
+
+  /* Menú compacto (logo arriba, enlaces en una sola fila) para no ocupar tanta pantalla al estar fijo */
+  .barra { padding: 0.5rem 0; gap: 0.2rem; }
+  .logo { font-size: 1.3rem; }
+  .logo img { width: 28px; height: 28px; }
+  nav { width: 100%; }
+  nav ul { justify-content: space-between; gap: 0.2rem 0.5rem; }
+  nav a { font-size: 0.92rem; padding: 0.2rem 0; }
+}
+@media (max-width: 480px) {
+  .galeria { grid-template-columns: 1fr; }
+}
+
+/* Respeta a quien pidió menos movimiento en su dispositivo */
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
 }

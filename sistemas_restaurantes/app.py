@@ -1,12 +1,9 @@
-# AVANCE: navegación entre páginas con Flask + CRUD de platos en MySQL + persistencia de reservas y contacto.
-from datetime import date
+from datetime import date, datetime
 from flask import Flask, render_template, request, redirect, url_for
 from flask_mysqldb import MySQL
 
-# Creando la aplicación Flask
 app = Flask(__name__)
 
-# Configuramos la conexión a la base de datos (XAMPP)
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = ''
@@ -15,7 +12,6 @@ app.config['MYSQL_DB'] = 'restaurante'
 mysql = MySQL(app)
 
 
-# Filtro para mostrar precios: convierte 14500 en $14.500
 @app.template_filter('precio_ar')
 def precio_ar(valor):
     return "$" + f"{int(valor):,}".replace(",", ".")
@@ -30,73 +26,90 @@ def index():
 # --- CARTA ---
 @app.route('/carta')
 def carta():
-    # Leemos los platos de la tabla 'platos' y se los mandamos al HTML (READ)
+    # Lee los platos de la tabla 'platos' y se los mandamos al HTML (READ)
     cursor = mysql.connection.cursor()
     cursor.execute("SELECT id, nombre, descripcion, precio, imagen FROM platos")
     platos = cursor.fetchall()
     cursor.close()
     return render_template('carta.html', platos=platos)
 
-
-# --- CRUD: AGREGAR PLATO (CREATE) ---
-@app.route('/plato/nuevo', methods=['GET', 'POST'])
-def nuevo_plato():
-    if request.method == 'POST':
-        nombre = request.form.get('nombre')
-        descripcion = request.form.get('descripcion')
-        precio = request.form.get('precio')
-        imagen = request.form.get('imagen') or 'milanesa.jpg'
-
-        cursor = mysql.connection.cursor()
-        cursor.execute("""
-            INSERT INTO platos (nombre, descripcion, precio, imagen)
-            VALUES (%s, %s, %s, %s)
-        """, (nombre, descripcion, precio, imagen))
-        mysql.connection.commit()  # Guardamos los cambios en la base de datos
-        cursor.close()
-
-        return redirect(url_for('carta'))
-
+# --- CRUD: MOSTRAR EL FORMULARIO PARA AGREGAR (create) ---
+@app.route('/create')
+def create():
+    # plato=None significa "campos vacíos": es el mismo HTML que usamos para editar
     return render_template('plato_form.html', accion='Agregar', plato=None)
 
+# --- CRUD: GUARDAR UN PLATO NUEVO (store) ---
+# Recibe lo que se envió en el formulario /create y lo guarda en la base.
+@app.route('/store', methods=['POST'])
+def store():
+    # 1) LEER del formulario (usamos los mismos nombres de campo que ya tenías)
+    nombre = request.form.get('nombre')
+    descripcion = request.form.get('descripcion')
+    precio = request.form.get('precio')
+    foto = request.files['imagen']
 
-# --- CRUD: EDITAR PLATO (UPDATE) ---
-@app.route('/plato/editar/<int:id>', methods=['GET', 'POST'])
-def editar_plato(id):
+    # 2) NOMBRE ÚNICO para la foto: fecha y hora + nombre original
+    # CAMBIO: la guía usa solo %Y%H%M%S; sumamos %m%d (mes y día) para que sea más único
+    tiempo = datetime.now().strftime("%Y%m%d%H%M%S")
+    nuevoNombreFoto = 'milanesa.jpg'
+    if foto.filename != '':
+        nuevoNombreFoto = tiempo + foto.filename
+        foto.save(app.root_path + "/static/uploads/" + nuevoNombreFoto)
+
+    # 3) SQL + cursor + execute + commit + close
     cursor = mysql.connection.cursor()
-
-    if request.method == 'POST':
-        nombre = request.form.get('nombre')
-        descripcion = request.form.get('descripcion')
-        precio = request.form.get('precio')
-        imagen = request.form.get('imagen') or 'milanesa.jpg'
-
-        cursor.execute("""
-            UPDATE platos
-            SET nombre = %s, descripcion = %s, precio = %s, imagen = %s
-            WHERE id = %s
-        """, (nombre, descripcion, precio, imagen, id))
-        mysql.connection.commit()  # Confirmamos la actualización
-        cursor.close()
-
-        return redirect(url_for('carta'))
-
-    # Si es GET, consultamos los datos del plato actual para rellenar el formulario
-    cursor.execute("SELECT id, nombre, descripcion, precio, imagen FROM platos WHERE id = %s", (id,))
-    plato = cursor.fetchone()
+    cursor.execute("""
+        INSERT INTO platos (nombre, descripcion, precio, imagen)
+        VALUES (%s, %s, %s, %s)
+    """, (nombre, descripcion, precio, nuevoNombreFoto))
+    mysql.connection.commit()
     cursor.close()
 
+    # 4) REDIRECT: volvemos a la carta
+    return redirect(url_for('carta'))
+
+# --- CRUD: ELIMINAR UN PLATO (destroy) ---
+@app.route('/destroy/<int:id>', methods=['POST'])
+def destroy(id):
+    cursor = mysql.connection.cursor()
+    # CAMBIO: (id,) con coma para que sea una tupla (la guía lo escribe sin coma)
+    cursor.execute("DELETE FROM platos WHERE id = %s", (id,))
+    mysql.connection.commit()
+    cursor.close()
+    return redirect(url_for('carta'))
+
+# --- CRUD: MOSTRAR EL FORMULARIO PARA EDITAR (edit) ---
+@app.route('/edit/<int:id>')
+def edit(id):
+    cursor = mysql.connection.cursor()
+    # CAMBIO: (id,) con coma para que sea una tupla (la guía lo escribe sin coma)
+    cursor.execute("SELECT id, nombre, descripcion, precio, imagen FROM platos WHERE id = %s", (id,))
+    # fetchone trae UN solo plato (fetchall trae una lista de todos)
+    plato = cursor.fetchone()
+    cursor.close()
     return render_template('plato_form.html', accion='Editar', plato=plato)
 
 
-# --- CRUD: ELIMINAR PLATO (DELETE) ---
-@app.route('/plato/eliminar/<int:id>', methods=['POST', 'GET'])
-def eliminar_plato(id):
+# --- CRUD: GUARDAR LOS CAMBIOS DE UN PLATO (update) ---
+@app.route('/update', methods=['POST'])
+def update():
+    id = request.form.get('id')
+    nombre = request.form.get('nombre')
+    descripcion = request.form.get('descripcion')
+    precio = request.form.get('precio')
+
+    # 2) SQL + cursor + execute + commit + close
     cursor = mysql.connection.cursor()
-    cursor.execute("DELETE FROM platos WHERE id = %s", (id,))
-    mysql.connection.commit()  # Confirmamos el borrado
+    cursor.execute("""
+        UPDATE platos
+        SET nombre = %s, descripcion = %s, precio = %s
+        WHERE id = %s
+    """, (nombre, descripcion, precio, id))
+    mysql.connection.commit()
     cursor.close()
 
+    # 3) REDIRECT
     return redirect(url_for('carta'))
 
 
@@ -104,7 +117,6 @@ def eliminar_plato(id):
 @app.route('/nosotros')
 def nosotros():
     return render_template('nosotros.html')
-
 
 # --- RESERVAS (procesa y guarda en MySQL, luego redirige a gracias) ---
 @app.route('/reservas', methods=['GET', 'POST'])
@@ -143,10 +155,12 @@ def reservas():
             """, (nombre, telefono, email, fecha, hora, personas, lugar, silla_bebe, comentarios))
             mysql.connection.commit()
             cursor.close()
+            # Solo se llega acá si todo lo anterior salió bien
+            return redirect(url_for('gracias', tipo='reserva'))
         except Exception as e:
             print("Error al guardar reserva:", e)
-
-        return redirect(url_for('gracias', tipo='reserva'))
+            mysql.connection.rollback()
+            return "No pudimos guardar tu reserva. Por favor, intenta de nuevo más tarde."
 
     # 'hoy' evita que el calendario deje elegir fechas pasadas
     return render_template('reservas.html', hoy=date.today().isoformat())
@@ -183,10 +197,11 @@ def contacto():
             """, (nombre, email, telefono, motivo, mensaje, respuesta))
             mysql.connection.commit()
             cursor.close()
+            return redirect(url_for('gracias', tipo='consulta'))
         except Exception as e:
             print("Error al guardar mensaje:", e)
-
-        return redirect(url_for('gracias', tipo='consulta'))
+            mysql.connection.rollback()
+            return "No pudimos guardar tu mensaje. Por favor, intenta de nuevo más tarde."
 
     return render_template('contacto.html')
 

@@ -50,9 +50,15 @@
 
     <section>
       <div class="contenedor" style="max-width: 650px;">
-        <form method="POST">
+                <!-- CAMBIO: action dinámico (con plato → /update, sin plato → /store) y enctype para poder subir archivos -->
+        <form method="POST" action="{{ url_for('update') if plato else url_for('store') }}" enctype="multipart/form-data">
           <fieldset>
             <legend>{{ accion }} plato</legend>
+
+            {% if plato %}
+            <!-- CAMBIO: id escondido, así /update sabe qué plato modificar -->
+            <input type="hidden" name="id" value="{{ plato[0] }}">
+            {% endif %}
 
             <div class="campo">
               <label for="nombre">Nombre del plato *</label>
@@ -71,9 +77,15 @@
               </div>
 
               <div class="campo">
-                <label for="imagen">Nombre del archivo de imagen</label>
-                <input type="text" id="imagen" name="imagen" value="{{ plato[4] if plato else '' }}" placeholder="Ej: milanesa.jpg">
-                <small style="color: var(--suave); margin-top: 0.3rem;">Debe estar en la carpeta <code>static/uploads/</code> (ej: <em>milanesa.jpg</em>, <em>empanadas.jpg</em>, <em>hamburguesa.jpg</em>).</small>
+                {% if plato %}
+                <!-- CAMBIO: al editar solo mostramos la foto actual (update no cambia la foto) -->
+                <label>Foto actual</label>
+                <p>{{ plato[4] }}</p>
+                {% else %}
+                <!-- CAMBIO: ahora es un archivo, no un texto. El name sigue siendo "imagen" porque store lo lee con request.files['imagen'] -->
+                <label for="imagen">Foto del plato</label>
+                <input type="file" id="imagen" name="imagen" accept="image/*">
+                {% endif %}
               </div>
             </div>
           </fieldset>
@@ -87,9 +99,22 @@
             </a>
           </div>
         </form>
-      </div>
-    </section>
-  </main>
+
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    
+    
+  
+    
+  
+
 
   <footer class="pie">
     <div class="contenedor">

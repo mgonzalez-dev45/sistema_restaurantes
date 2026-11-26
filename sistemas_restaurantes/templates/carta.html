@@ -50,7 +50,7 @@
       <section aria-labelledby="cat-platos">
         <div class="barra-carta">
           <h2 id="cat-platos">Nuestros platos</h2>
-          <a href="{{ url_for('nuevo_plato') }}" class="boton boton-agregar">
+          <a href="{{ url_for('create') }}" class="boton boton-agregar">
             <i class="fa-solid fa-plus"></i> Agregar plato
           </a>
         </div>
@@ -69,10 +69,10 @@
 
               <!-- Botones de administración (CRUD) -->
               <div class="acciones-plato">
-                <a href="{{ url_for('editar_plato', id=plato[0]) }}" class="boton-accion boton-editar">
+                <a href="{{ url_for('edit', id=plato[0]) }}" class="boton-accion boton-editar">
                   <i class="fa-solid fa-pen-to-square"></i> Editar
                 </a>
-                <form action="{{ url_for('eliminar_plato', id=plato[0]) }}" method="POST" onsubmit="return confirm('¿Seguro que querés eliminar «{{ plato[1] }}»?');" class="form-eliminar">
+                <form action="{{ url_for('destroy', id=plato[0]) }}" method="POST" onsubmit="return confirm('¿Seguro que querés eliminar «{{ plato[1] }}»?');" class="form-eliminar">
                   <button type="submit" class="boton-accion boton-eliminar">
                     <i class="fa-solid fa-trash"></i> Eliminar
                   </button>
